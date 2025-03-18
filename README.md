@@ -1,6 +1,7 @@
 # RTD-Lite
  This repository provides official implementation of RTD-Lite topological metric from paper "RTD-Lite: Scalable Topological Analysis for Comparing Weighted Graphs in Learning Tasks" accepted for AISTATS 2025 conference. 
 
+*Repository is under construction*
 
 ## Abstract
 
