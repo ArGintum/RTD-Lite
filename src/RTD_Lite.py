@@ -82,13 +82,32 @@ def prim_algo_simplified(adjacency_matrix):
 
 ### Main part
 class RTD_Lite:
-    def __init__(self, r1, r2, quant_outer=None, quant_inner=None, distance='euclidean'):
-        dists_1 = torch.cdist(r1, r1)
+    """RTD_Lite Cross Barcode computation using the direct algorithm. (Algorithm 1 from the paper)
+
+    Parameters
+    ----------  
+    r1: 2d array 
+        first point cloud / distance matrix
+    r2: 2d array 
+        second point cloud / distance matrix
+    quant_outer: number or None
+        parameter for distance normalization in r1 (only for batch optimization)
+    quant_inner: number or None
+        parameter for distance normalization in r2 (only for batch optimization)
+    dist: bool
+        Whether data is a precomputed distance matrix
+    """
+    
+    def __init__(self, r1, r2, quant_outer=None, quant_inner=None, dist=False):
+        
+        if not dist:
+            dists_1 = torch.cdist(r1, r1)
+            dists_2 = torch.cdist(r2, r2)
+
         if quant_outer is None:
             quant_outer = torch.quantile(dists_1, 0.9)
         self.r1 = dists_1 / quant_outer
         
-        dists_2 = torch.cdist(r2, r2)
         if quant_inner is None:
             quant_inner = torch.quantile(dists_2, 0.9)
         self.r2 = dists_2 / quant_inner
@@ -146,13 +165,30 @@ class RTD_Lite:
         return barcodes
     
 class RTD_Lite_summ_only:
-    def __init__(self, r1, r2, quant_outer=None, quant_inner=None, distance='euclidean'):
-        dists_1 = torch.cdist(r1, r1)
+    """RTD_Lite computation using the simplified algorithm. (Algorithm 2 from the paper)
+
+    Parameters
+    ----------  
+    r1: 2d array 
+        first point cloud / distance matrix
+    r2: 2d array 
+        second point cloud / distance matrix
+    quant_outer: number or None
+        parameter for distance normalization in r1 (only for batch optimization)
+    quant_inner: number or None
+        parameter for distance normalization in r2 (only for batch optimization)
+    dist: bool
+        Whether data is a precomputed distance matrix
+    """
+    def __init__(self, r1, r2, quant_outer=None, quant_inner=None, dist=False):
+        if not dist:
+            dists_1 = torch.cdist(r1, r1)
+            dists_2 = torch.cdist(r2, r2)
+
         if quant_outer is None:
             quant_outer = torch.quantile(dists_1, 0.9)
         self.r1 = dists_1 / quant_outer
         
-        dists_2 = torch.cdist(r2, r2)
         if quant_inner is None:
             quant_inner = torch.quantile(dists_2, 0.9)
         self.r2 = dists_2 / quant_inner
