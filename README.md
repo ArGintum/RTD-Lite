@@ -1,5 +1,5 @@
 # RTD-Lite
- This repository provides official implementation of RTD-Lite topological metric from paper "RTD-Lite: Scalable Topological Analysis for Comparing Weighted Graphs in Learning Tasks" accepted for AISTATS 2025 conference. 
+ This repository provides official implementation of RTD-Lite topological metric from [paper](https://raw.githubusercontent.com/mlresearch/v258/main/assets/tulchinskii25a/tulchinskii25a.pdf) "RTD-Lite: Scalable Topological Analysis for Comparing Weighted Graphs in Learning Tasks",  which is accepted for presentation at [AISTATS 2025](https://aistats.org/aistats2025/)
 
 *Repository is under construction*
 
@@ -17,6 +17,19 @@ Notebook ... provides basic examples of usage of RTD-Lite.
 
 ## Cite us
 
+Please use the following BibTeX code to cite [our paper](https://raw.githubusercontent.com/mlresearch/v258/main/assets/tulchinskii25a/tulchinskii25a.pdf):
+
 ```
-to be done after publishing
+@InProceedings{tulchinskii2025rtdlite,
+    title     = {RTD-Lite: Scalable Topological Analysis for Comparing Weighted Graphs in Learning Tasks},
+    author    = {Tulchinskii, Eduard and Voronkova, Daria and Trofimov, Ilya and Burnaev, Evgeny and Barannikov, Serguei},
+    booktitle = {Proceedings of The 28th International Conference on Artificial Intelligence and Statistics},
+    pages     = {3826--3834},
+    year      = {2025},
+    volume    = {258},
+    series    = {Proceedings of Machine Learning Research},
+    month     = {03--05 May},
+    publisher = {PMLR},
+    url       = {https://proceedings.mlr.press/v258/tulchinskii25a.html}
+}
 ```
