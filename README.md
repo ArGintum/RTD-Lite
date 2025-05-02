@@ -13,7 +13,13 @@ Provided code requires Python 3.9.X version; additional packeges that required f
 
 ## Usage
 
-Notebook ... provides basic examples of usage of RTD-Lite.
+Notebooks in the `Experiments` folder contain code for reproducing main experiments from our paper:
+
+- MNIST_UMAP.ipynb -  comparison MNIST low-dimensional representation by UMAP ('Comparing representations from UMAP' section)
+- FMNIST+RTD_Lite -  optimization of RTD-Lite (example for FMNIST dataset)
+- Rings.ipynd -  experiments on Rings dataset
+- Cluster.ipynb - experiments on Clusters dataset
+
 
 ## Cite us
 
