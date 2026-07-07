@@ -1,9 +1,16 @@
 from sklearn.metrics.pairwise import pairwise_distances
 from copy import copy
+from time import time
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
 import ripserplusplus as rpp_py
+
+def h1sum(barc):
+    if 1 in barc:
+        return sum([x[1] - x[0] for x in barc[1]])
+    else:
+        return 0.0
 
 def pdist_gpu(a, b, device = 'cuda:0'):
     A = torch.tensor(a, dtype = torch.float64)
@@ -84,7 +91,59 @@ def count_cross_barcodes(cloud_1, cloud_2, dim, title = '', is_plot = True, pdis
       plt.show()
 
     return barcodes
-  
+
+def calc_embed_dist(a, b, dim = 1, pdist_device = 'cuda:0', verbose = False, norm = 'median', metric = 'euclidean', use_max = False):
+    
+    n = a.shape[0]
+    
+    if pdist_device == 'cpu':
+        if verbose:
+            print('pdist on cpu start')
+        r1 = pairwise_distances(a, a, n_jobs = 40, metric = metric)
+        r2 = pairwise_distances(b, b, n_jobs = 40, metric = metric)
+    else:
+        if verbose:
+            print('pdist on gpu start')
+        r1 = pdist_gpu(a, a, device = pdist_device)
+        r2 = pdist_gpu(b, b, device = pdist_device)
+    
+    if norm == 'median':
+        r1 = r1 / np.median(r1)
+        r2 = r2 / np.median(r2)
+    elif norm == 'quantile':
+        r1 = r1 / np.quantile(r1, 0.9)
+        r2 = r2 / np.quantile(r2, 0.9)
+       
+    if verbose:
+        print('pairwise distances calculated')
+    
+    #
+    #  0      r1
+    #  r1  min(r1,r2)
+    #
+    d = np.zeros((2 * n, 2 * n))
+    #d[:n, :n] = np.zeros((n, n))
+    
+    if not use_max:
+        d[n:, :n] = r1
+        d[:n, n:] = r1
+        d[n:, n:] = np.minimum(r1, r2)
+    else:
+        d[n:, :n] = np.maximum(r1, r2)
+        d[:n, n:] = np.maximum(r1, r2)
+        d[n:, n:] = r2
+
+    m = d[n:, :n].mean()
+    d[d < m*(1e-6)] = 0
+    d_tril = d[np.tril_indices(d.shape[0], k = -1)]
+    
+    if verbose:
+        print('matrix prepared')
+    
+    barc = rpp_py.run("--format lower-distance --dim %d" % dim, d_tril)
+    
+    return barc
+
 def plot_barcodes(arr, color_list = ['deepskyblue', 'limegreen', 'darkkhaki'], dark_color_list = None, title = '', hom = None):
 
     if dark_color_list is None:
